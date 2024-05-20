@@ -3,9 +3,9 @@ package com.project.myeventsmanagementapp.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import com.google.android.gms.tasks.Tasks
 
 @Entity("tags_table")
 data class Tags (
@@ -14,17 +14,48 @@ data class Tags (
     val name: String,
     @ColumnInfo(name = "tag_color")
     val color: String,
-    @ColumnInfo(name = "tag_border")
-    val borderColor: String
+//    @ColumnInfo(name = "tag_border")
+//    val borderColor: String,
+    @ColumnInfo(name = "icon_name")
+    val iconName: String
 
 )
 
-data class TaskWithTagsList(
-    @Embedded val tag: Tags,
+//data class TaskWithTagsLists(
+//    @Embedded val tag: Tags,
+//    @Relation(
+//        parentColumn =  "tag_name",
+//        entityColumn = "task_tag_name"
+//    )
+//    var tasks: List<Task>
+//
+//)
+
+@Entity(primaryKeys = ["task_Id","tag_name"],)
+data class TaskTagCrossRef(
+    @ColumnInfo(name = "task_Id")
+    val taskId: Long,
+    @ColumnInfo(name = "tag_name")
+    val tagName: String
+)
+
+data class TagWithTaskLists(
+    @Embedded val  tags: Tags,
     @Relation(
-        parentColumn =  "tag_name",
-        entityColumn = "task_tag_name"
+        parentColumn = "tag_name",
+        entityColumn = "task_Id",
+        associateBy = Junction(TaskTagCrossRef::class)
     )
-    var tasks: List<Tasks>
-
+    val task: List<Task>
 )
+
+data class TaskWithTags(
+    @Embedded val task: Task,
+    @Relation(
+        parentColumn = "task_Id",
+        entityColumn = "tag_name",
+        associateBy = Junction(TaskTagCrossRef::class)
+    )
+    var tags: List<Tags>
+)
+

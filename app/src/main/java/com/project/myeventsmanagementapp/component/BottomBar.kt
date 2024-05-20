@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -55,13 +57,15 @@ fun BottomBar(navController: NavHostController) {
                             "",
                             modifier = Modifier
                                 .size(75.dp)
+                                .semantics { testTag = "Navigate To Add Screen" }
                                 .clickable {
                                     navigationSelectedItem.value = index
-                                    navController.navigate(bottomNavigationItem.route) {
-                                        popUpToTop(navController)
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
+                                    navController.navigate(bottomNavigationItem.route)
+//                                    {
+//                                        popUpToTop(navController)
+//                                        launchSingleTop = true
+//                                        restoreState = true
+//                                    }
                                 },
                             tint = PrimaryColor
                         )
@@ -71,23 +75,22 @@ fun BottomBar(navController: NavHostController) {
                            "",
                            modifier = Modifier
                                .clickable {
-                                   navigationSelectedItem.intValue = index
+                                   navigationSelectedItem.value = index
                                    navController.navigate(bottomNavigationItem.route){
                                        popUpToTop(navController)
                                        launchSingleTop = true
                                        restoreState = true
                                    }
                                }
-                               .padding(12.dp),
-                           tint = if (navigationSelectedItem.intValue == index) PrimaryColor else Color.Gray.copy(
+                               .padding(12.dp)
+                               .semantics { testTag = bottomNavigationItem.route },
+                           tint = if (navigationSelectedItem.value == index) PrimaryColor else Color.Gray.copy(
                                0.5f
                            )
                        )
                     }
                 }
-            
         }
-        
     }
     
 }

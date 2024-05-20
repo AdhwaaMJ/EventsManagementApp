@@ -16,7 +16,8 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     val auth = Firebase.auth
     var isSignedIn =
         if (auth.currentUser == null) mutableStateOf(Screens.Authentication.route) else
-            mutableStateOf(Screens.MainApp.route)
+            mutableStateOf(Screens.MainApp.route
+            )
     val error = mutableStateOf("")
 
     init {

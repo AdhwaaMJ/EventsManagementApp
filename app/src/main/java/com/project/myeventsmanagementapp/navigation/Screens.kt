@@ -10,12 +10,18 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screens( val route: String) {
+
     data object MainApp : Screens("mainGraph") {
         data object Home : Screens("home_screen")
         data object TaskByDate : Screens("task_by_date_screen")
         data object AddScreen : Screens("add_screen")
         data object CategoryScreen : Screens("category_screen")
         data object StaticsScreen : Screens("Statics_screen")
+
+        data object DateDialog: Screens("DateDialog")
+        data object AddTagDialog: Screens("AddTagDialog")
+        data object TaskByCategory: Screens("TaskByCategory")
+
     }
 
     data object Authentication : Screens("authGraph"){

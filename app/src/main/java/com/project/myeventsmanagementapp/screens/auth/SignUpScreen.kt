@@ -31,13 +31,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.project.myeventsmanagementapp.R
 import com.project.myeventsmanagementapp.component.LoginWithGoogle
 import com.project.myeventsmanagementapp.ui.theme.PrimaryColor
 
 
 @Composable
-fun SignUpScreen(navController: NavController,authViewModel: AuthViewModel) {
+fun SignUpScreen(navController: NavHostController,authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var userName by remember { mutableStateOf("") }
