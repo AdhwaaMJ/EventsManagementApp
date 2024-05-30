@@ -77,6 +77,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                 color = Color.Black
             )
         }
+
         item {
             Row(modifier = Modifier.padding(vertical = 4.dp)) {
                 Column(modifier = Modifier
@@ -88,11 +89,11 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         Color(0xFF7DC8E7),
                         height = 220.dp,
                         onClick = {
-//                            navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.Completed.type}" )
+                            navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.Completed.type}" )
                         },
                         image = {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                                painter = painterResource(id = R.drawable.folder_1),
                                 contentDescription = "",
                                 modifier = Modifier.size(80.dp)
                             )
@@ -143,7 +144,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         },
                         image = {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                                painter = painterResource(id = R.drawable.imac_2),
                                 contentDescription = "",
                                 modifier = Modifier.size(90.dp)
                             )
@@ -171,7 +172,8 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                     "View all",
                     modifier = Modifier
                         .padding(top = 8.dp)
-                        .clickable {navController.navigate(Screens.MainApp.TaskByDate.route)
+                        .clickable {
+                            navController.navigate(Screens.MainApp.TaskByDate.route)
                         },
                     fontSize = 12.sp,
                     color = PrimaryColor

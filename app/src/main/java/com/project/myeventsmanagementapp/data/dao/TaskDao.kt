@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.project.myeventsmanagementapp.data.entity.SearchResults
 import com.project.myeventsmanagementapp.data.entity.TagWithTaskLists
 import com.project.myeventsmanagementapp.data.entity.Tags
 import com.project.myeventsmanagementapp.data.entity.Task
@@ -13,6 +14,7 @@ import com.project.myeventsmanagementapp.data.entity.TaskWithTags
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface TaskDao {
+
     @Transaction
     @Upsert
     suspend fun addTask(task: Task) : Long
@@ -57,5 +59,22 @@ interface TaskDao {
     @Transaction
     @Query("SELECT * FROM tags_table")
     fun getTagWithTaskLists(): Flow<List<TagWithTaskLists>>
+
+
+    //Search
+    @Transaction
+    @Query("SELECT * FROM task_table WHERE task_title LIKE '%' || :searchQuery || '%' OR task_description LIKE '%' || :searchQuery || '%'")
+    fun searchTaskWithTags(searchQuery: String): List<TaskWithTags>
+
+    @Transaction
+    @Query("SELECT * FROM tags_table WHERE tag_name LIKE '%' || :searchQuery || '%' ")
+    fun searchTagsWithTasks(searchQuery: String): List<TagWithTaskLists>
+
+    @Transaction
+    suspend fun searchCombined(searchQuery: String): SearchResults {
+        val taskResults = searchTaskWithTags(searchQuery)
+        val tagResults = searchTagsWithTasks(searchQuery)
+        return SearchResults(taskResults , tagResults)
+    }
 
 }

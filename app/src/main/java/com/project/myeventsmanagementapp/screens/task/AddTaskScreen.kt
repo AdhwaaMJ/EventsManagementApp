@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,8 +33,13 @@ import com.project.myeventsmanagementapp.navigation.Screens
 import com.project.myeventsmanagementapp.ui.theme.PrimaryColor
 
 @Composable
-fun AddTaskScreen(navController: NavHostController, viewModel: AddTaskViewModel) {
-    val allTags = viewModel.allTags.collectAsState(initial = null)
+fun AddTaskScreen(navController: NavHostController, viewModel: TaskViewModel) {
+
+    LaunchedEffect(Unit) {
+        viewModel.allTags
+    }
+    val allTags = viewModel.allTags.collectAsState()
+
     val showStartTimeTimeDialog = remember {
         mutableStateOf(false)
     }
@@ -87,8 +93,9 @@ fun AddTaskScreen(navController: NavHostController, viewModel: AddTaskViewModel)
 
         }
         item {
-            AddTagsListView(allTags.value.orEmpty(), navController) {
+            AddTagsListView(allTags, navController) {
                 viewModel.selectedTags.value = it
+                viewModel.selectedTags.value
             }
         }
 
@@ -119,7 +126,7 @@ fun AddTaskScreen(navController: NavHostController, viewModel: AddTaskViewModel)
 }
 
 @Composable
-fun ButtonAddTask(addTask: AddTaskViewModel) {
+fun ButtonAddTask(addTask: TaskViewModel) {
     Button(
         onClick = {
             addTask.addTask()

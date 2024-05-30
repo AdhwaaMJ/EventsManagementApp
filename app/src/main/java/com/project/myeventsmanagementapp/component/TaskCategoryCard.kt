@@ -120,7 +120,7 @@ fun TaskCategoryCardPreview() {
                 onClick = {},
                 image = {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        painter = painterResource(id = R.drawable.folder_1),
                         contentDescription = "",
                         modifier = Modifier.size(80.dp)
                     )
@@ -167,7 +167,7 @@ fun TaskCategoryCardPreview() {
                 onClick = {},
                 image = {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        painter = painterResource(id = R.drawable.imac_2),
                         contentDescription = "",
                         modifier = Modifier.size(90.dp)
                     )

@@ -36,7 +36,7 @@ import com.project.myeventsmanagementapp.ui.theme.PrimaryColor
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AddTagDialog(navController: NavHostController, addTaskViewModel: AddTaskViewModel) {
+fun AddTagDialog(navController: NavHostController, taskViewModel: TaskViewModel) {
     Box(
         Modifier
             .padding(16.dp)
@@ -60,7 +60,7 @@ fun AddTagDialog(navController: NavHostController, addTaskViewModel: AddTaskView
             CustomTextField(
                 label = "Tag Name",
                 textColor = PrimaryColor,
-                value = addTaskViewModel.tagName
+                value = taskViewModel.tagName
             )
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -70,7 +70,7 @@ fun AddTagDialog(navController: NavHostController, addTaskViewModel: AddTaskView
                     Canvas(modifier = Modifier
                         .size(50.dp)
                         .clickable {
-                            addTaskViewModel.tagColor.value = it
+                            taskViewModel.tagColor.value = it
                                 .toArgb()
                                 .toString()
                         }) {
@@ -90,7 +90,7 @@ fun AddTagDialog(navController: NavHostController, addTaskViewModel: AddTaskView
                         modifier = Modifier
                             .size(50.dp)
                             .clickable {
-                                addTaskViewModel.tagIcon.value = getIconName(it)
+                                taskViewModel.tagIcon.value = getIconName(it)
                             })
                 }
             }
@@ -114,7 +114,7 @@ fun AddTagDialog(navController: NavHostController, addTaskViewModel: AddTaskView
                 Button(
                     modifier = Modifier.weight(1f),
                     onClick = {
-                        addTaskViewModel.addTag()
+                        taskViewModel.addTag()
                         navController.popBackStack()
                     }, shape = RoundedCornerShape(16.dp)
                 ) {

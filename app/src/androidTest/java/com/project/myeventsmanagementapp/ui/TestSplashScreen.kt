@@ -2,6 +2,7 @@ package com.project.myeventsmanagementapp.ui
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -53,5 +54,14 @@ class TestSplashScreen {
     @Test
     fun testSplashScreenContent(){
         composeTestRule.onNodeWithTag("title text").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("description text").assertIsDisplayed()
+    }
+
+    @Test
+    fun testSplashScreenClickButton(){
+        composeTestRule.onNodeWithTag("Login Button").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("Login Button").assertHasClickAction()
+
+
     }
 }

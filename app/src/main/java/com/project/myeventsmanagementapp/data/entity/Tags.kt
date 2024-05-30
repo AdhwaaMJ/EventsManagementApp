@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import dagger.hilt.internal.ComponentEntryPoint
 
 @Entity("tags_table")
 data class Tags (
@@ -17,8 +18,9 @@ data class Tags (
 //    @ColumnInfo(name = "tag_border")
 //    val borderColor: String,
     @ColumnInfo(name = "icon_name")
-    val iconName: String
-
+    val iconName: String,
+    @ColumnInfo(name = "isSelected")
+    var isSelected: Boolean,
 )
 
 //data class TaskWithTagsLists(
@@ -31,7 +33,7 @@ data class Tags (
 //
 //)
 
-@Entity(primaryKeys = ["task_Id","tag_name"],)
+@Entity(primaryKeys = ["task_Id","tag_name"])
 data class TaskTagCrossRef(
     @ColumnInfo(name = "task_Id")
     val taskId: Long,

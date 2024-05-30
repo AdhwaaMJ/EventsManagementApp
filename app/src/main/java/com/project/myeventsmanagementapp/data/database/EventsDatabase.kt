@@ -12,7 +12,7 @@ import com.project.myeventsmanagementapp.data.entity.Task
 import com.project.myeventsmanagementapp.data.entity.TaskTagCrossRef
 
 
-@Database(entities = [Task::class,Tags::class, TaskTagCrossRef::class], version = 3, exportSchema = false)
+@Database(entities = [Task::class,Tags::class, TaskTagCrossRef::class], version = 4, exportSchema = false)
 abstract class EventsDatabase: RoomDatabase() {
 
     abstract fun taskDao():TaskDao

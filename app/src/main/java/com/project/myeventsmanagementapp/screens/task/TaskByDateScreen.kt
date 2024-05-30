@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -27,13 +28,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.project.myeventsmanagementapp.R
 import com.project.myeventsmanagementapp.component.CalendarWeeklyView
+import com.project.myeventsmanagementapp.component.Search
 import com.project.myeventsmanagementapp.component.TaskCard
 import java.time.LocalDate
 
 @Composable
-fun TaskByDateScreen(viewmodel: TaskViewModel) {
+fun TaskByDateScreen(viewmodel: TaskViewModel,navController: NavHostController) {
     val tasks = viewmodel.taskWithTags
 
     LaunchedEffect(Unit) {
@@ -43,7 +47,13 @@ fun TaskByDateScreen(viewmodel: TaskViewModel) {
     var selectedDate by remember {
         mutableStateOf(LocalDate.now().toString())
     }
+
     Column {
+        Search{
+            viewmodel.searchInTasksAndTags(it)
+        }
+
+        Spacer(modifier = Modifier.size(20.dp))
         CalendarWeeklyView(onDateSelected = {
             viewmodel.sortTasksByDate(it.toString())
             selectedDate = it.toString()
@@ -86,7 +96,7 @@ fun TaskByDateScreen(viewmodel: TaskViewModel) {
                                         taskTitle = taskWithTags.task.title,
                                         taskWithTags.task.timeFrom,
                                         taskWithTags.task.timeTo,
-                                        taskWithTags.tags
+                                        taskWithTags.tags,
                                     )
                                 }
                             }
@@ -101,7 +111,7 @@ fun TaskByDateScreen(viewmodel: TaskViewModel) {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                            painter = painterResource(id = R.drawable.vector_2_1),
                             contentDescription = ""
                         )
                         Text(

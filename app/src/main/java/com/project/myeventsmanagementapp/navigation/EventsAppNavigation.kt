@@ -2,18 +2,11 @@ package com.project.myeventsmanagementapp.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -34,7 +27,6 @@ import com.project.myeventsmanagementapp.screens.auth.SignUpScreen
 import com.project.myeventsmanagementapp.screens.auth.SplashScreen
 import com.project.myeventsmanagementapp.screens.task.AddTagDialog
 import com.project.myeventsmanagementapp.screens.task.AddTaskScreen
-import com.project.myeventsmanagementapp.screens.task.AddTaskViewModel
 import com.project.myeventsmanagementapp.screens.task.CategoryScreen
 import com.project.myeventsmanagementapp.screens.task.HomeScreen
 import com.project.myeventsmanagementapp.screens.task.TaskByDateScreen
@@ -98,17 +90,16 @@ fun NavGraphBuilder.mainAppNavigation(
         }
         composable(Screens.MainApp.TaskByDate.route){
                 val viewmodel: TaskViewModel = hiltViewModel()
-                TaskByDateScreen(viewmodel)
+                TaskByDateScreen(viewmodel,navController)
 
         }
-
         composable(Screens.MainApp.CategoryScreen.route){
             val taskViewModel:TaskViewModel = hiltViewModel()
             CategoryScreen(userName.invoke(), taskViewModel, navController, logout)
 
         }
         composable(Screens.MainApp.AddScreen.route){
-            val viewModel: AddTaskViewModel = hiltViewModel()
+            val viewModel: TaskViewModel = hiltViewModel()
             viewModel.taskDate.value = it.savedStateHandle.get<String>("selectedDate").orEmpty()
             AddTaskScreen(navController, viewModel )
         }
@@ -133,8 +124,8 @@ fun NavGraphBuilder.mainAppNavigation(
             dismissOnBackPress = true
         )
     ) {
-        val addTaskViewModel: AddTaskViewModel = hiltViewModel()
-        AddTagDialog(navController, addTaskViewModel)
+        val taskViewModel: TaskViewModel = hiltViewModel()
+        AddTagDialog(navController, taskViewModel)
     }
     composable("${Screens.MainApp.TaskByCategory.route}/{tagName}", arguments = listOf(
         navArgument("tagName"){
@@ -147,8 +138,9 @@ fun NavGraphBuilder.mainAppNavigation(
                 "tagName"
             ).orEmpty()
         }
-        TasksByCategory(tagWithTaskLists, navController)
+        TasksByCategory(tagWithTaskLists, navController,taskViewModel,navArgument.arguments?.getString("tagName"))
     }
+
 }
 
 fun NavOptionsBuilder.popUpToTop(navController: NavController){

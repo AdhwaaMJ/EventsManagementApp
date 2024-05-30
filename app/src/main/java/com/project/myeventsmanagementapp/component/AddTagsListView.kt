@@ -13,12 +13,16 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.navigation.NavController
 import com.project.myeventsmanagementapp.data.entity.Tags
 import com.project.myeventsmanagementapp.navigation.Screens
@@ -26,8 +30,8 @@ import com.project.myeventsmanagementapp.ui.theme.PrimaryColor
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AddTagsListView(list: List<Tags>, navController: NavController ,onTagClick: (MutableSet<Tags>) -> Unit) {
-    val selectedItems = remember { mutableSetOf<Tags>() }
+fun AddTagsListView(list: State<List<Tags>>, navController: NavController,selectedItemsState: (List<Tags>) -> (List<Tags>)) {
+    val selectedItems = remember { mutableStateListOf<Tags>() }
 
     Column(modifier = Modifier.wrapContentSize()) {
         Text(
@@ -41,7 +45,7 @@ fun AddTagsListView(list: List<Tags>, navController: NavController ,onTagClick: 
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            list.forEach {
+            list.value.fastForEach {
                 val isSelected = selectedItems.contains(it)
                 Box(
                     Modifier
@@ -56,7 +60,8 @@ fun AddTagsListView(list: List<Tags>, navController: NavController ,onTagClick: 
                             } else {
                                 selectedItems.add(it)
                             }
-                            onTagClick.invoke(selectedItems)
+                            it.isSelected = !it.isSelected
+                            selectedItemsState.invoke(selectedItems)
                         }
                 ) {
                     Text(

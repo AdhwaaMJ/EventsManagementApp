@@ -1,6 +1,7 @@
 package com.project.myeventsmanagementapp.Repository
 
 import com.project.myeventsmanagementapp.data.dao.TaskDao
+import com.project.myeventsmanagementapp.data.entity.SearchResults
 import com.project.myeventsmanagementapp.data.entity.TagWithTaskLists
 import com.project.myeventsmanagementapp.data.entity.Tags
 import com.project.myeventsmanagementapp.data.entity.Task
@@ -57,5 +58,10 @@ class TaskRepository @Inject constructor(
     }
 
     fun getTagWithTaskLists() = taskDao.getTagWithTaskLists()
+
+    //Search
+    suspend fun searchCombined(searchQuery: String): SearchResults{
+        return taskDao.searchCombined(searchQuery)
+    }
 
 }
