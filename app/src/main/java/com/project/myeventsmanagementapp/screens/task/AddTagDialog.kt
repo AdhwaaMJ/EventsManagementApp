@@ -19,8 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,9 +40,7 @@ fun AddTagDialog(navController: NavHostController, taskViewModel: TaskViewModel)
             .padding(16.dp)
             .background(Color.Transparent)
     ) {
-        val value = remember {
-            mutableStateOf("")
-        }
+//        val value = remember { mutableStateOf("") }
         Column(
             modifier = Modifier
                 .background(Color.White, RoundedCornerShape(16.dp))

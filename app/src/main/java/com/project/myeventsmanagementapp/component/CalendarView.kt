@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -144,12 +144,12 @@ fun MonthHeader(daysOfWeek: YearMonth, state: CalendarState) {
             fontSize = 16.sp
         )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Icon(Icons.Default.KeyboardArrowLeft, "", Modifier.clickable {
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, "", Modifier.clickable {
                 scope.launch {
                     state.scrollToMonth(daysOfWeek.previousMonth)
                 }
             })
-            Icon(Icons.Default.KeyboardArrowRight, "", Modifier.clickable {
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "", Modifier.clickable {
                 scope.launch { state.scrollToMonth(daysOfWeek.nextMonth) }
             })
         }

@@ -20,17 +20,13 @@ import javax.inject.Inject
 class TaskViewModel @Inject constructor(private val taskRepository: TaskRepository) : ViewModel()
 
 {
-
-    val task = mutableStateOf<List<Task>>(emptyList())
-    val tags = taskRepository.getAllTags()
-
     val cancelledTasks = taskRepository.getTagWithTasksList(TaskType.Cancelled.type)
     val pendingTasks = taskRepository.getTagWithTasksList(TaskType.Pending.type)
     val completedTasks = taskRepository.getTagWithTasksList(TaskType.Completed.type)
     val onGoingTasks = taskRepository.getTagWithTasksList(TaskType.OnGoing.type)
 
-    val tagWithTasks = mutableStateOf<List<TagWithTaskLists>>(emptyList())
-    val taskWithTags =  mutableStateOf<List<TaskWithTags>> (emptyList())
+    val tagWithTasks = MutableStateFlow<List<TagWithTaskLists>>(emptyList())
+    val taskWithTags : MutableState<List<TaskWithTags>> = mutableStateOf(emptyList())
 
     val title: MutableState<String> = mutableStateOf("")
     val description: MutableState<String> = mutableStateOf("")
@@ -43,11 +39,12 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
     val tagName: MutableState<String> = mutableStateOf("")
     val tagColor: MutableState<String> = mutableStateOf("")
     val tagIcon: MutableState<String> = mutableStateOf("")
-    val isSelected : MutableState<Boolean> = mutableStateOf(false)
+    val isSelected: MutableState<Boolean> = mutableStateOf(false)
 
     val selectedTags = mutableStateOf<List<Tags>>(emptyList())
 
     var allTags: MutableStateFlow<List<Tags>> = MutableStateFlow(emptyList())
+    val taskInWeek = taskRepository.getTasksWithTagsByDayOfCurrentWeek()
 
     init {
         viewModelScope.launch {
@@ -60,20 +57,19 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
             }
         }
         getTagWithTaskLists()
-
     }
 
     fun addTask() {
-            val task = Task(
-                title = title.value,
-                description = description.value,
-                date = taskDate.value,
-                timeTo = startTime.value,
-                timeFrom = endTime.value,
-                taskType = taskType.value,
-                tagName = category.value
-            )
-           viewModelScope.launch {
+        val task = Task(
+            title = title.value,
+            description = description.value,
+            date = taskDate.value,
+            timeFrom = startTime.value,
+            timeTo = endTime.value,
+            taskType = taskType.value,
+            tagName = category.value
+        )
+        viewModelScope.launch {
             insertTaskWithTags(
                 task,
                 selectedTags.value
@@ -81,6 +77,46 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
         }
     }
 
+    fun getSelectedTask(taskId: Long) {
+        viewModelScope.launch {
+            val selectedTask = taskRepository.getTaskWithTagsById(taskId)
+
+            title.value = selectedTask.task.title
+            description.value = selectedTask.task.description
+            taskDate.value = selectedTask.task.date
+            startTime.value = selectedTask.task.timeFrom.orEmpty()
+            endTime.value = selectedTask.task.timeTo.orEmpty()
+            selectedTags.value = selectedTask.tags //all tags is selected false
+        }
+    }
+
+    fun updateTask(taskId: Long) {
+        viewModelScope.launch {
+
+            val task = Task(
+                taskId = taskId,
+                title = title.value,
+                description = description.value,
+                date = taskDate.value,
+                timeFrom = startTime.value,
+                timeTo = endTime.value,
+                taskType = taskType.value,
+                tagName = tagName.value
+            )
+
+            taskRepository.updateTaskWithTags(task, selectedTags.value)
+            refreshTasks()
+
+        }
+
+    }
+
+    private fun refreshTasks() {
+        viewModelScope.launch {
+            val tasks = taskRepository.getAllTasksWithTags()
+            taskWithTags.value = tasks
+        }
+    }
     fun addTag() {
         viewModelScope.launch {
             taskRepository.insertTag(
@@ -89,34 +125,21 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
                     tagColor.value,
                     tagIcon.value,
                     isSelected.value
-                    )
+                )
             )
-        }
-    }
 
-
- //delete function
-    fun deleteTask(task: Task) {
-        viewModelScope.launch {
-            taskRepository.deleteTask(task)
-        }
-    }
-
-     //search
-    fun searchInTasksAndTags(query: String){
-        viewModelScope.launch {
-            tagWithTasks.value = taskRepository.searchCombined(query).tagResults
-            taskWithTags.value = taskRepository.searchCombined(query).taskResults
         }
     }
 
     private suspend fun insertTaskWithTags(task: Task, tags: List<Tags>) {
         val taskId = taskRepository.insertTask(task)
-        val taskTagCrossRer =
-            tags.map { TaskTagCrossRef(taskId, it.name) }
-        taskRepository.insertTaskTagCrossRefs(taskTagCrossRer)
-    }
+        taskRepository.insertTagList(tags)
+        val taskTagCrossRefs = tags.map {
+            TaskTagCrossRef(taskId, it.name)
+        }
+        taskRepository.insertTaskTagCrossRefs(taskTagCrossRefs)
 
+    }
 
 
     fun sortTasksByDate(date: String) {
@@ -129,8 +152,43 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
 
     private fun getTagWithTaskLists() {
         viewModelScope.launch {
-            taskRepository.getTagWithTaskLists().collect{
-                tagWithTasks.value =it
+            taskRepository.getTagWithTaskLists().collect {
+                tagWithTasks.value = it
+            }
+        }
+    }
+
+    fun getTasksByTagName(tagName: String) {
+        viewModelScope.launch {
+            taskRepository.getAllTaskWithTags().collect {
+                taskWithTags.value =
+                    it.filter { task ->
+                        task.tags.map { tag ->
+                            tag.name
+                        }.contains(tagName)
+                    }
+            }
+        }
+    }
+
+    fun searchInTasksAndTags(query: String) {
+        viewModelScope.launch {
+            tagWithTasks.value = taskRepository.searchCombined(query).tagResults
+            taskWithTags.value = taskRepository.searchCombined(query).taskResults
+        }
+    }
+
+    fun deleteTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.deleteTask(task)
+
+        }
+    }
+
+    fun getAllTag() {
+        viewModelScope.launch {
+            taskRepository.getAllTags().collect {
+                allTags.value = it
             }
         }
     }

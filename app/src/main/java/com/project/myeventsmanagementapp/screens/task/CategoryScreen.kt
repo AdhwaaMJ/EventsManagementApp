@@ -15,21 +15,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseUser
 import com.project.myeventsmanagementapp.component.TagCard
+import com.project.myeventsmanagementapp.component.UserImageWithEmail
 import com.project.myeventsmanagementapp.iconByName
 import com.project.myeventsmanagementapp.navigation.Screens
 import com.project.myeventsmanagementapp.ui.theme.PrimaryColor
 
 @Composable
-fun CategoryScreen(
-    user: FirebaseUser?,
-    viewModel: TaskViewModel,
-    navController: NavHostController,
-    logout: () -> Unit,
-) {
+fun CategoryScreen(user: FirebaseUser?, viewModel: TaskViewModel, navController: NavHostController, logout: () -> Unit, )
+{
     val tagsWithTasksList = viewModel.tagWithTasks
 
     Column {
-//        UserImageWithEmail(user = user)
+        UserImageWithEmail(user = user, navController, logout)
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxWidth()

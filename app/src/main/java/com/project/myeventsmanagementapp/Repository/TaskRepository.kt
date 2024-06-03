@@ -9,59 +9,63 @@ import com.project.myeventsmanagementapp.data.entity.TaskTagCrossRef
 import com.project.myeventsmanagementapp.data.entity.TaskWithTags
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TaskRepository @Inject constructor(
     private val taskDao: TaskDao
 ) {
-    suspend fun insertTask(task: Task) : Long {
+    suspend fun insertTask(task: Task): Long {
         return taskDao.addTask(task)
     }
 
-    suspend fun insertTaskTagCrossRefs(taskTagCrossRefs: List<TaskTagCrossRef>){
+    suspend fun insertTaskTagCrossRefs(taskTagCrossRefs: List<TaskTagCrossRef>) {
         taskDao.insertTaskTagCrossRefs(taskTagCrossRefs)
     }
 
-    suspend fun deleteTask(task: Task){
+
+    suspend fun deleteTask(task: Task) {
         taskDao.deleteTask(task)
     }
 
-     fun getAllTasks(): Flow<List<Task>>{
-        return taskDao.getAllTasks()
-    }
-
-    suspend fun insertTag(tag: Tags){
+    suspend fun insertTag(tag: Tags) {
         taskDao.upsertTag(tag)
     }
 
-    suspend fun deleteTag(tag: Tags){
-        taskDao.deleteTag(tag)
-    }
-
-    fun getTagWithTasksList(tagName: String): Flow<List<TagWithTaskLists>>{
+    fun getTagWithTasksList(tagName: String): Flow<TagWithTaskLists> {
         return taskDao.getTagsWithTask(tagName)
     }
 
-    fun getAllTags(): Flow<List<Tags>>{
-        return taskDao.getAllTags()
-    }
+     fun getAllTags() = taskDao.getAllTags()
 
-    suspend fun insertTagList(tagList: List<Tags>){
+
+    suspend fun insertTagList(tagList: List<Tags>) {
         return taskDao.upsertTagList(tagList)
     }
 
-    fun sortTasksByDate(date:String) : Flow<List<TaskWithTags>> {
+    fun sortTasksByDate(date: String): Flow<List<TaskWithTags>> {
         return taskDao.sortByCreationDate(date)
-    }
-
-    fun getTagsWithTasks(type: String): Flow<List<TaskWithTags>>{
-        return taskDao.getTaskWithTags()
     }
 
     fun getTagWithTaskLists() = taskDao.getTagWithTaskLists()
 
-    //Search
-    suspend fun searchCombined(searchQuery: String): SearchResults{
+    //search
+    suspend fun searchCombined(searchQuery: String): SearchResults {
         return taskDao.searchCombined(searchQuery)
     }
+
+    suspend fun getTaskWithTagsById(taskId: Long) = taskDao.getTaskWithTagsById(taskId)
+
+    fun getAllTaskWithTags() = taskDao.getAllTaskWithTags()
+
+    suspend fun updateTaskWithTags(task: Task, tags: List<Tags>) {
+        taskDao.updateTaskWithTags(task, tags)
+    }
+
+    suspend fun getAllTasksWithTags(): List<TaskWithTags> {
+        return taskDao.getAllTasksWithTags()
+    }
+
+    fun getTasksWithTagsByDayOfCurrentWeek() = taskDao.getTasksWithTagsByDayOfCurrentWeek()
 
 }

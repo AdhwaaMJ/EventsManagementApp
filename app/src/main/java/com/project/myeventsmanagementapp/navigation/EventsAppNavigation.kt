@@ -29,9 +29,11 @@ import com.project.myeventsmanagementapp.screens.task.AddTagDialog
 import com.project.myeventsmanagementapp.screens.task.AddTaskScreen
 import com.project.myeventsmanagementapp.screens.task.CategoryScreen
 import com.project.myeventsmanagementapp.screens.task.HomeScreen
+import com.project.myeventsmanagementapp.screens.task.SettingsScreen
 import com.project.myeventsmanagementapp.screens.task.TaskByDateScreen
 import com.project.myeventsmanagementapp.screens.task.TaskViewModel
 import com.project.myeventsmanagementapp.screens.task.TasksByCategory
+import com.project.myeventsmanagementapp.screens.task.UpdateTaskScreen
 
 @Composable
 fun EventsAppNavigation(
@@ -138,7 +140,21 @@ fun NavGraphBuilder.mainAppNavigation(
                 "tagName"
             ).orEmpty()
         }
-        TasksByCategory(tagWithTaskLists, navController,taskViewModel,navArgument.arguments?.getString("tagName"))
+        TasksByCategory( navController,taskViewModel,navArgument.arguments?.getString("tagName"))
+    }
+    composable(
+        "${Screens.MainApp.UpdateTask.route}/{taskId}", arguments =
+        listOf(navArgument("taskId") {
+            type = NavType.LongType
+        })
+    ) {
+        val viewmodel: TaskViewModel = hiltViewModel()
+
+        UpdateTaskScreen(navController, viewmodel, it.arguments?.getLong("taskId"), it)
+    }
+
+    composable(Screens.MainApp.Settings.route){
+        SettingsScreen(navController)
     }
 
 }

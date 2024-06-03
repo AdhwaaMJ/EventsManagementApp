@@ -86,6 +86,7 @@ class TaskDaoTest {
         val tag = Tags(
             "Personal",
             "color",
+            "",
             ""
 
         )
@@ -98,6 +99,7 @@ class TaskDaoTest {
         val tag = Tags(
             "Personal",
             "color",
+            "",
             ""
         )
         taskDao.upsertTag(tag)
@@ -111,11 +113,13 @@ class TaskDaoTest {
         val tag = Tags(
             "Personal",
             "color",
+            "",
             ""
         )
         val tag2 = Tags(
             "Work",
             "color",
+            "",
             ""
         )
         taskDao.upsertTag(tag)
@@ -128,11 +132,13 @@ class TaskDaoTest {
         val tag = Tags(
             "Personal",
             "color",
+            "",
             ""
         )
         val tag2 = Tags(
             "Work",
             "color",
+            "",
             ""
         )
 

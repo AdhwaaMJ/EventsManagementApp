@@ -56,8 +56,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
     val onGoingTask = viewModel.onGoingTasks.collectAsState(initial = null)
     val pendingTask = viewModel.pendingTasks.collectAsState(initial = null)
 
-    val taskList = viewModel.taskWithTags
-
+    val tasksList = viewModel.taskWithTags.value
 
     LazyColumn(modifier = Modifier
         .fillMaxSize()
@@ -85,7 +84,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                     .padding(vertical = 12.dp)) {
                     TaskCategoryCard(
                         TaskType.Completed.type,
-                        completedTask.value?.first()?.task?.size.toString().plus("Task"),
+                        completedTask.value?.task?.size.toString().plus(" Task"),
                         Color(0xFF7DC8E7),
                         height = 220.dp,
                         onClick = {
@@ -101,7 +100,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         })
                     TaskCategoryCard(
                         TaskType.Pending.type,
-                        pendingTask.value?.first()?.task?.size.toString().plus("Task"),
+                        pendingTask.value?.task?.size.toString().plus("Task"),
                         Color(0xFF7D88E7),
                         height = 190.dp,
                         onClick = {navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.Pending.type}")
@@ -121,7 +120,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                     .padding(vertical = 12.dp)) {
                     TaskCategoryCard(
                         TaskType.Cancelled.type,
-                        cancelledTask.value?.first()?.task?.size.toString().plus("Task"),
+                        cancelledTask.value?.task?.size.toString().plus("Task"),
                         Color(0xFFE77D7D),
                         height = 190.dp,
                         onClick = {navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.Cancelled.type}")
@@ -137,7 +136,7 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                         })
                     TaskCategoryCard(
                         TaskType.OnGoing.type,
-                        onGoingTask.value?.first()?.task?.size.toString().plus("Task"),
+                        onGoingTask.value?.task?.size.toString().plus("Task"),
                         Color(0xFF81E89E),
                         height = 220.dp,
                         onClick = {navController.navigate("${Screens.MainApp.TaskByCategory.route}/${TaskType.OnGoing.type}")
@@ -180,8 +179,17 @@ fun HomeScreen(invoke: FirebaseUser?, navController: NavHostController, viewMode
                 )
             }
         }
-        items(taskList.value) {
-            TaskCard(taskTitle = it.task.title, timeFrom = it.task.timeFrom, timeTo = it.task.timeTo, tag = it.tags)
+        items(tasksList.orEmpty()) {
+            TaskCard(taskTitle = it.task.title,
+                timeFrom = it.task.timeFrom,
+                timeTo = it.task.timeTo,
+                tag = it.tags,
+                onDelete = {
+                   viewModel.deleteTask(it.task)
+                },
+                onClick = {
+                    navController.navigate("${Screens.MainApp.UpdateTask.route}/${it.task.taskId}")
+                })
         }
 
     }
@@ -245,8 +253,3 @@ fun HeaderView(userName: String, photo:Uri?) {
 
 
 
-//@Preview
-//@Composable
-//fun homePreview(){
-//    HomeScreen()
-//}
